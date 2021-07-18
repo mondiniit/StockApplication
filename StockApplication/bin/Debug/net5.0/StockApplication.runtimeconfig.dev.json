@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/Users/mondini/.dotnet/store/|arch|/|tfm|",
+      "/Users/mondini/.nuget/packages"
+    ]
+  }
+}
