@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using Microsoft.AspNetCore.Mvc;
 using StockApplication.Models;
 using System.Data.SQLite;
@@ -12,18 +12,19 @@ namespace StockApplication.Controllers
         private SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=stock-alerter.sqlite;Version=3;");
 
         private SQLiteCommand command;
-
+        
         public ActionResult Stock()
         {
             var alert = new Alert();
             return View(alert);
         }
         // POST
-        public ActionResult SaveStock(string symbol, decimal price, string email)
+        public ActionResult SaveStock(int id, string symbol, decimal price, string email)
         {
             Console.WriteLine("Save Stock");
             var alert = new Alert()
             {
+                Id = id,
                 Symbol = symbol,
                 AlertPrice = price,
                 Email = email,
@@ -32,6 +33,7 @@ namespace StockApplication.Controllers
             m_dbConnection.Open();
             command = new SQLiteCommand("INSERT INTO alerts VALUES (@Id, @Symbol, @AlertPrice, @Email, @Sent);", m_dbConnection);
             command.Parameters.Add(new SQLiteParameter("@Id", DbType.Int32));
+            command.Parameters["@Id"].Value = id;
             command.Parameters.Add(new SQLiteParameter("@Symbol", DbType.String));
             command.Parameters["@Symbol"].Value = symbol;
             command.Parameters.Add(new SQLiteParameter("@AlertPrice", DbType.Decimal));
@@ -42,7 +44,7 @@ namespace StockApplication.Controllers
             command.Parameters["@Sent"].Value = alert.Sent;
             command.ExecuteNonQuery();
             m_dbConnection.Close();
-            return View("Stock");
+            return  RedirectToAction("Index", "Home");
         }
         //DELETE
         public ActionResult Erase(string symbol, decimal price, string mail)
@@ -56,9 +58,14 @@ namespace StockApplication.Controllers
         //GET List
         public ActionResult StockList()
         {
+            List<Alert> lAlert = new List<Alert>();
             m_dbConnection.Open();
             command = new SQLiteCommand("SELECT alerts.Id, alerts.Symbol, alerts.AlertPrice, alerts.Email, alerts.Sent FROM alerts;", m_dbConnection);
-            command.ExecuteNonQuery();
+            lAlert = command.ExecuteNonQuery();
+            foreach (var var in COLLECTION)
+            {
+                
+            }
             m_dbConnection.Close();
             return View("Stock");
         }
