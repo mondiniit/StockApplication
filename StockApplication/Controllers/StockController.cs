@@ -28,7 +28,7 @@ namespace StockApplication.Controllers
                 Symbol = symbol,
                 AlertPrice = price,
                 Email = email,
-                Sent = new byte[] {0}
+                Sent = true
             };
             m_dbConnection.Open();
             command = new SQLiteCommand("INSERT INTO alerts VALUES (@Id, @Symbol, @AlertPrice, @Email, @Sent);", m_dbConnection);
@@ -59,14 +59,21 @@ namespace StockApplication.Controllers
         public ActionResult StockList()
         {
             List<Alert> lAlert = new List<Alert>();
+            DataTable objDataTable = new DataTable();
             m_dbConnection.Open();
             command = new SQLiteCommand("SELECT alerts.Id, alerts.Symbol, alerts.AlertPrice, alerts.Email, alerts.Sent FROM alerts;", m_dbConnection);
-            lAlert = command.ExecuteNonQuery();
-            foreach (var var in COLLECTION)
+            command.ExecuteNonQuery();
+            foreach (DataRow dataRow in objDataTable.Rows)
             {
-                
+                lAlert.Add(new Alert(){
+                    Symbol = dataRow["Symbol"].ToString(),
+                    AlertPrice = (decimal) dataRow["AlerPrice"],
+                    Email = dataRow["Email"].ToString(),
+                    Sent = (bool) dataRow["Sent"]
+                });
             }
             m_dbConnection.Close();
+            
             return View("Stock");
         }
     }

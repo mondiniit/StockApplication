@@ -10,3 +10,25 @@
 </div>
 
 <!--Aki table -->
+@using (Html.BeginForm("StockList", "Stock", FormMethod.Get))
+{
+    <div>
+        <table class="table table-bordered table-responsive table-hover">
+            <tr>
+                <th>Symbol </th>
+                <th>Price </th>
+                <th>Email </th>
+                <th></th>
+            </tr>
+            @foreach (var d in Model)
+            {
+                <tr>
+                    <td>@d.Symbol</td>
+                    <td>@d.AlertPrice</td>
+                    <td>@d.Email</td>
+                    <td>@d.Sent</td>
+                </tr>
+            }
+        </table>
+    </div>
+}

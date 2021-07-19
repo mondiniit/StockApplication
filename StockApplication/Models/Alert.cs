@@ -14,7 +14,7 @@ namespace StockApplication.Models
         public string Symbol { get; set; }
         public decimal AlertPrice { get; set; }
         public string Email { get; set; }
-        public Byte[] Sent{ get; set; }
+        public bool Sent{ get; set; }
         public IEnumerator GetEnumerator()
         {
             throw new NotImplementedException();
