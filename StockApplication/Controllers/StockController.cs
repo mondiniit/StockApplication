@@ -12,7 +12,7 @@ namespace StockApplication.Controllers
         private SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=stock-alerter.sqlite;Version=3;");
 
         private SQLiteCommand command;
-        
+
         public ActionResult Stock()
         {
             var alert = new Alert();
@@ -55,6 +55,7 @@ namespace StockApplication.Controllers
             m_dbConnection.Close();
             return View("Stock");
         }
+        
         //GET List
         public ActionResult StockList()
         {
@@ -62,19 +63,29 @@ namespace StockApplication.Controllers
             DataTable objDataTable = new DataTable();
             m_dbConnection.Open();
             command = new SQLiteCommand("SELECT alerts.Id, alerts.Symbol, alerts.AlertPrice, alerts.Email, alerts.Sent FROM alerts;", m_dbConnection);
-            command.ExecuteNonQuery();
-            foreach (DataRow dataRow in objDataTable.Rows)
+            
+            using (var rdr = command.ExecuteReader())
             {
-                lAlert.Add(new Alert(){
-                    Symbol = dataRow["Symbol"].ToString(),
-                    AlertPrice = (decimal) dataRow["AlerPrice"],
-                    Email = dataRow["Email"].ToString(),
-                    Sent = (bool) dataRow["Sent"]
-                });
+                if (rdr.HasRows)
+                {
+                    while (rdr.Read())
+                    {
+                        var alert = new Alert();
+                         alert.Symbol= rdr.GetString(rdr.GetOrdinal("Symbol"));
+                         alert.AlertPrice= rdr.GetDecimal(rdr.GetOrdinal("Symbol"));
+                         alert.Email= rdr.GetString(rdr.GetOrdinal("Symbol"));
+                         alert.Sent= rdr.GetBoolean(rdr.GetOrdinal("Symbol"));
+
+                        //map other properties here as well
+                        lAlert.Add(alert);
+                    }
+                }
             }
+           
             m_dbConnection.Close();
             
-            return View("Stock");
+            return  RedirectToAction("Index", "Home");
+            //return  RedirectToAction(lAlert);
         }
     }
 }

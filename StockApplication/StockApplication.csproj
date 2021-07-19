@@ -8,6 +8,7 @@
       <Content Remove="Views\Stocks\Stocks.cshtml" />
       <Content Remove="Pages\**" />
       <Content Remove="Views\Stock\SaveStock.cshtml" />
+      <Content Remove="Repository\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -16,14 +17,17 @@
 
     <ItemGroup>
       <Compile Remove="Pages\**" />
+      <Compile Remove="Repository\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="Pages\**" />
+      <EmbeddedResource Remove="Repository\**" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="Pages\**" />
+      <None Remove="Repository\**" />
     </ItemGroup>
 
     <ItemGroup>
